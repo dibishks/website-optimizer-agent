@@ -33,13 +33,16 @@ async function handleFetchUrl() {
     fetchError.classList.add('hidden');
     
     try {
-        const response = await fetch(url);
+        // Use a CORS proxy to get around browser restrictions
+        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+        const response = await fetch(proxyUrl);
+        
         if (!response.ok) throw new Error('Network response was not ok');
         const text = await response.text();
         htmlInput.value = text;
     } catch (error) {
         console.error('Fetch error:', error);
-        fetchError.textContent = "Could not fetch URL (likely CORS). Please paste HTML manually.";
+        fetchError.textContent = "Could not fetch URL. The site might be blocking proxies. Try pasting HTML.";
         fetchError.classList.remove('hidden');
     } finally {
         fetchBtn.disabled = false;
