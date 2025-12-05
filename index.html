@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Website Optimizer Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Left Pane: Input -->
+    <div class="w-full md:w-1/2 p-6 flex flex-col border-r border-slate-200 bg-white h-full overflow-y-auto">
+        <header class="mb-6">
+            <h1 class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+                </svg>
+                Site Optimizer Agent
+            </h1>
+            <p class="text-slate-500 text-sm mt-1">Your AI-powered assistant for better static sites.</p>
+        </header>
+
+        <!-- URL Input -->
+        <div class="mb-4">
+            <label for="urlInput" class="block text-sm font-medium text-slate-700 mb-1">Website URL (Optional)</label>
+            <div class="flex gap-2">
+                <input type="text" id="urlInput" placeholder="https://example.com" 
+                    class="flex-1 rounded-md border-slate-300 border p-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none shadow-sm transition">
+                <button id="fetchBtn" class="bg-indigo-50 text-indigo-700 px-4 py-2 rounded-md font-medium hover:bg-indigo-100 transition border border-indigo-200">
+                    Fetch HTML
+                </button>
+            </div>
+            <p id="fetchError" class="text-red-500 text-xs mt-1 hidden"></p>
+        </div>
+
+        <!-- Divider -->
+        <div class="relative mb-4">
+            <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-slate-200"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-slate-500">OR</span>
+            </div>
+        </div>
+
+        <!-- HTML Input -->
+        <div class="flex-1 flex flex-col min-h-0">
+            <label for="htmlInput" class="block text-sm font-medium text-slate-700 mb-1">Paste HTML Code</label>
+            <textarea id="htmlInput" placeholder="<!DOCTYPE html><html>..." 
+                class="flex-1 w-full rounded-md border-slate-300 border p-3 font-mono text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none shadow-sm resize-none"></textarea>
+        </div>
+
+        <div class="mt-4">
+            <button id="runBtn" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold text-lg shadow-md hover:bg-indigo-700 transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
+                Run Agent Audit
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Right Pane: Results -->
+    <div class="w-full md:w-1/2 bg-slate-50 h-full overflow-y-auto relative">
+        <!-- Empty State -->
+        <div id="resultsPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 p-8 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <p class="text-lg">Ready to analyze.</p>
+            <p class="text-sm">Enter a URL or paste HTML to begin.</p>
+        </div>
+
+        <!-- Processing State -->
+        <div id="processingView" class="hidden p-8 max-w-lg mx-auto mt-10">
+            <h2 class="text-xl font-bold text-slate-800 mb-6">Agent is working...</h2>
+            <div id="timeline" class="space-y-4">
+                <!-- Timeline items will be injected here -->
+            </div>
+        </div>
+
+        <!-- Results State -->
+        <div id="resultsView" class="hidden p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">Audit Results</h2>
+                <div id="scoreBadge" class="hidden px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-bold">
+                    Score: <span id="overallScore">0</span>/100
+                </div>
+            </div>
+
+            <div id="issuesContainer" class="space-y-8">
+                <!-- Issues will be grouped sections here from JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="analyzer.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
